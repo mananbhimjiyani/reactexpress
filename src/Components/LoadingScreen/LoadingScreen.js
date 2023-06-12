@@ -13,6 +13,7 @@ function LoadingScreen() {
             <Lottie className={"lottie-player"}
                 loop={false}
                 animationData={lottie}
+                speed={2}
                 play
                     onComplete={postAnimation}
             />
