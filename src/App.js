@@ -16,6 +16,7 @@ import HealthData from "./HealthData";
 import Inquiry from "./Inquiry";
 function App() {
     return (
+
         <Router>
             <div className="container">
                 <div className="container">

@@ -129,10 +129,9 @@ import React, {useState} from 'react';
 import axios from 'axios';
 import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useNavigate } from "react-router-dom";
+import NavBar from "./Components/NavBar";
 
 const FormComponent = () => {
-    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         fullname: '',
         age: '',
@@ -144,22 +143,23 @@ const FormComponent = () => {
         illness: '',
         reference: '',
     });
-    
+
 
     const handleChange = (e) => {
         setFormData({
             ...formData,
             [e.target.name]: e.target.value,
         });
+
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-      
+
         try {
           const res = await axios.post('/inquiry', formData);
-          toast.success('Data entered successfully');
-      
+          toast.success(`Data entered successfully, ${res.status}`);
+
           setTimeout(() => {
             //const message = encodeURIComponent(`New inquiry raised by ${formData.fullname} ${formData.gender}%0aContact number is ${formData.userMobile}%0aReason for Joining NA Been practising yoga lately?: ${formData.doneyoga}%0aYes?where and how long have you been trying to practice? ${formData.yes}%0aAny illness or discomfort? ${formData.illness}%0aReference: Social Media / Print Media / Other? ${formData.reference}`);
             const url = `https://api.whatsapp.com/send/?phone=918866160330&text=New inquiry raised by ${formData.fullname} ${formData.gender}%0aContact number is ${formData.userMobile}%0aReason for Joining NA Been practising yoga lately?: ${formData.doneyoga}%0aYes?where and how long have you been trying to practice? ${formData.yes}%0aAny illness or discomfort? ${formData.illness}%0aReference: Social Media / Print Media / Other? ${formData.reference}&type=phone_number&app_absent=0`;
@@ -185,10 +185,12 @@ const FormComponent = () => {
           }
         }
       };
-      
+
+
 
     return (
         <div>
+            <NavBar/>
             <form onSubmit={handleSubmit}>
                 <div className="container">
                     <div className="container">
@@ -204,6 +206,7 @@ const FormComponent = () => {
                         placeholder="Enter Your Full Name"
                         name="fullname"
                         id="fullname"
+                        pattern="[A-Za-z ]+"
                         value={formData.fullname}
                         onChange={handleChange}
                         required
@@ -211,10 +214,12 @@ const FormComponent = () => {
 
                     <label htmlFor="age"><b>Age</b></label>
                     <input
-                        type="number"
+                        type="text"
                         placeholder="Enter Your Age"
                         name="age"
                         id="age"
+                        pattern="[0-9]{2}"
+                        inputMode="numeric"
                         value={formData.age}
                         onChange={handleChange}
                         required
@@ -262,29 +267,40 @@ const FormComponent = () => {
                            placeholder="Enter Reason"
                            name="reason"
                            id="reason"
+                           pattern="[A-Za-z ]+"
                            value={formData.reason}
                            onChange={handleChange} required/>
 
-                    <label htmlFor="yes"><b>Have you been practising yoga lately?</b></label>
-                    <input type="text"
-                           placeholder="Enter Your Answer"
-                           name="doneyoga"
-                           id="doneyoga"
-                           value={formData.doneyoga}
-                           onChange={handleChange}
-                           required/>
+                    <label htmlFor="doneyoga"><b>Have you been practicing yoga lately?</b></label>
+                    <select
+                        name="doneyoga"
+                        id="doneyoga"
+                        value={formData.doneyoga}
+                        onChange={handleChange}
+                        required
+                    >
+                        <option value="">Select an option</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
 
-                    <label htmlFor="yes"><b>If the answer is "YES," where and how long have you been trying to
-                        practice?</b></label>
-                    <input type="text"
-                           placeholder="Enter Your Answer"
-                           name="yes"
-                           id="yes"
-                           value={formData.yes}
-                           onChange={handleChange} required/>
+                    {formData.doneyoga === "yes" && (
+                        <>
+                            <label htmlFor="yes"><b>If the answer is "YES," where and how long have you been trying to practice?</b></label>
+                            <input
+                                type="text"
+                                placeholder="Enter Your Answer"
+                                name="yes"
+                                id="yes"
+                                value={formData.yes}
+                                onChange={handleChange}
+                                required
+                            />
+                        </>
+                    )}
 
                     <label htmlFor="userMobile"><b>Mobile Number</b></label>
-                    <input type="number"
+                    <input type="tel"
                            placeholder="Enter Your Mobile Number"
                            name="userMobile"
                            id="userMobile"
@@ -298,7 +314,8 @@ const FormComponent = () => {
                            name="illness"
                            id="illness"
                            value={formData.illness}
-                           onChange={handleChange}required/>
+                           onChange={handleChange}
+                           required/>
 
                     <label htmlFor="reference"><b>Reference: - Social Media / Print Media / Other?</b></label>
                     <input type="text"
@@ -306,7 +323,8 @@ const FormComponent = () => {
                            name="reference"
                            id="reference"
                            value={formData.reference}
-                           onChange={handleChange}required/>
+                           onChange={handleChange}
+                           required/>
 
                     <p>On Submitting you agreeing to our <a href="/#">Terms & Condition</a>.</p>
                 </div>
