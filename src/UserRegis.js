@@ -1,11 +1,17 @@
 import * as React from 'react';
 import {Link} from "react-router-dom";
 import Navbar from "./Components/NavBar";
+import HCaptcha from "@hcaptcha/react-hcaptcha";
+import {motion} from "framer-motion";
 
 function UserRegis() {
+    const onVerifyCaptcha=(token)=> {
+        console.log("Verified: " + token);
+    }
     return (
         <div>
             <Navbar/>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
             <form action={"https://nys-server.onrender.com/userReg"} method={"post"}>
                 <div className="container">
                     <div className={'container'}>
@@ -58,6 +64,13 @@ function UserRegis() {
                     <label htmlFor="pswRepeat"><b>Confirm Password</b></label>
                     <input type="password" placeholder="Confirm Password" name="pswRepeat" id="pswRepeat" required/>
 
+                    <div>
+                        <HCaptcha
+                            sitekey="8e2005b0-560c-459d-804c-c60bf29defef"
+                            onVerify={onVerifyCaptcha}
+                        />
+                    </div>
+
                     <hr/>
 
                     <p>By creating an account you agree to our Terms & Privacy.</p>
@@ -67,7 +80,8 @@ function UserRegis() {
                     <p>Have an account? <Link to={'/userlogin'}> Login Here</Link>.</p>
                 </div>
             </form>
+            </motion.div>
         </div>
     )
-};
+}
 export default UserRegis;

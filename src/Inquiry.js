@@ -1,135 +1,10 @@
-// import React, {useState} from "react";
-// import Navbar from "./Components/NavBar";
-// import {Link} from "react-router-dom";
-// import {toast} from 'react-toastify';
-// import 'react-toastify/dist/ReactToastify.css';
-// import axios from "axios";
-// toast.configure()
-
-// function Inquiry() {
-//     const [gender, setGender] = useState("Female")
-//     const onOptionChange = e => {
-//         setGender(e.target.value)
-//     }
-
-//         const [formData, setFormData] = useState({ fullname: '', age: '' ,gender:'',});
-//         const [response, setResponse] = useState('');
-
-//         const handleChange = (e) => {
-//           setFormData({ ...formData, [e.target.name]: e.target.value });
-//         };
-
-//         const handleSubmit = async (e) => {
-//           e.preventDefault();
-//           try {
-//             const response = await fetch('/api/submit-form', {
-//               method: 'POST',
-//               headers: {
-//                 'Content-Type': 'application/json',
-//               },
-//               body: JSON.stringify(formData),
-//             });
-//             const data = await response.json();
-//             setResponse(data.message);
-//           } catch (error) {
-//             console.error(error);
-//             setResponse('An error occurred');
-//           }
-//         };
-
-//     return (
-//         <div>
-//             <Navbar/>
-
-//             <form name={"Inquiry"} onSubmit={"/inquiry"} method={"post"}>
-//                 <div className="container">
-//                     <div className={'container'}>
-//                         <div className={'pinkFont'}>
-//                             <h1>Inquiry</h1>
-//                         </div>
-//                     </div>
-//                     <p>Please fill in this form for Submitting Your Inquiry.</p>
-//                     <hr/>
-//                     <label htmlFor="fullname"><b>Full Name</b></label>
-//                     <input type="text" placeholder="Enter Your Full Name" name="fullname" id="fullname" required/>
-
-//                     <label htmlFor="age"><b>Age</b></label>
-//                     <input type="number" placeholder="Enter Your Age" name="age" id="age" required/>
-
-//                     <label htmlFor="gender"><b>Gender</b></label>
-//                     <div className={"container"}>
-//                         <input
-//                             type="radio"
-//                             name="gender"
-//                             value="Male"
-//                             id="Male"
-//                             checked={gender === "Male"}
-//                             onChange={onOptionChange}
-//                         />
-//                         <label htmlFor="Male">Male</label>
-
-//                         <input
-//                             type="radio"
-//                             name="gender"
-//                             value="Female"
-//                             id="Female"
-//                             checked={gender === "Female"}
-//                             onChange={onOptionChange}
-//                         />
-//                         <label htmlFor="Female">Female</label>
-
-//                         <input
-//                             type="radio"
-//                             name="gender"
-//                             value="Other"
-//                             id="Other"
-//                             checked={gender === "Other"}
-//                             onChange={onOptionChange}
-//                         />
-//                         <label htmlFor="Other">Other</label>
-
-//                         <p>
-//                             Selected gender <strong>{gender}</strong>
-//                         </p>
-//                     </div>
-
-//                     <label htmlFor="reason"><b>Reason For Joining Yoga</b></label>
-//                     <input type="textarea" placeholder="Enter Reason" name="reason" id="reason" required/>
-
-//                     <label htmlFor="yes"><b>Have you been practising yoga lately?</b></label>
-//                     <input type="text" placeholder="Enter Your Answer" name="doneyoga" id="doneyoga" required/>
-
-//                     <label htmlFor="yes"><b>If the answer is "YES," where and how long have you been trying to
-//                         practice?</b></label>
-//                     <input type="text" placeholder="Enter Your Answer" name="yes" id="yes" required/>
-
-//                     <label htmlFor="userMobile"><b>Mobile Number</b></label>
-//                     <input type="number" placeholder="Enter Your Mobile Number" name="userMobile" id="userMobile"
-//                            required/>
-
-//                     <label htmlFor="illness"><b>Any illness or discomfort?</b></label>
-//                     <input type="text" placeholder="Enter Your Answer" name="illness" id="illness" required/>
-
-//                     <label htmlFor="reference"><b>Reference: - Social Media / Print Media / Other?</b></label>
-//                     <input type="text" placeholder="Enter Your Reference" name="reference" id="reference" required/>
-
-//                     <p>On Submitting you agreeing to our <Link to={""}>Terms & Condition</Link>.</p>
-//                 </div>
-
-
-//                 <button type="submit" className="registerbtn">Submit</button>
-//             </form>
-//         </div>
-//     )
-
-// }
-
-// export default Inquiry;
 import React, {useState} from 'react';
 import axios from 'axios';
 import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import NavBar from "./Components/NavBar";
+import { motion } from "framer-motion";
+import HCaptcha from "@hcaptcha/react-hcaptcha";
 
 const FormComponent = () => {
     const [formData, setFormData] = useState({
@@ -142,6 +17,7 @@ const FormComponent = () => {
         userMobile: '',
         illness: '',
         reference: '',
+        other: '',
     });
 
 
@@ -185,12 +61,15 @@ const FormComponent = () => {
           }
         }
       };
-
-
+    const onVerifyCaptcha=(token)=> {
+        console.log("Verified: " + token);
+    }
 
     return (
         <div>
+
             <NavBar/>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
             <form onSubmit={handleSubmit}>
                 <div className="container">
                     <div className="container">
@@ -226,41 +105,17 @@ const FormComponent = () => {
                     />
 
                     <label htmlFor="gender"><b>Gender</b></label>
-                    <div className={"container"}>
-                        <input
-                            type="radio"
-                            name="gender"
-                            value="Male"
-                            id="Male"
-                            checked={formData.gender === "Male"}
-                            onChange={handleChange}
-                        />
-                        <label htmlFor="Male">Male</label>
-
-                        <input
-                            type="radio"
-                            name="gender"
-                            value="Female"
-                            id="Female"
-                            checked={formData.gender === "Female"}
-                            onChange={handleChange}
-                        />
-                        <label htmlFor="Female">Female</label>
-
-                        <input
-                            type="radio"
-                            name="gender"
-                            value="Other"
-                            id="Other"
-                            checked={formData.gender === "Other"}
-                            onChange={handleChange}
-                        />
-                        <label htmlFor="Other">Other</label>
-
-                        <p>
-                            Selected gender <strong>{formData.gender}</strong>
-                        </p>
-                    </div>
+                    <select
+                        name="gender"
+                        id="gender"
+                        value={formData.gender}
+                        onChange={handleChange}
+                        required
+                    >
+                        <option value="">Select an option</option>
+                        <option value="Social Media">Male</option>
+                        <option value="Print Media">Female</option>
+                    </select>
 
                     <label htmlFor="reason"><b>Reason For Joining Yoga</b></label>
                     <input type="textarea"
@@ -317,14 +172,48 @@ const FormComponent = () => {
                            onChange={handleChange}
                            required/>
 
-                    <label htmlFor="reference"><b>Reference: - Social Media / Print Media / Other?</b></label>
-                    <input type="text"
-                           placeholder="Enter Your Reference"
-                           name="reference"
-                           id="reference"
-                           value={formData.reference}
-                           onChange={handleChange}
-                           required/>
+                    <label htmlFor="reference"><b>Reference?</b></label>
+                    {/*<input type="text"*/}
+                    {/*       placeholder="Enter Your Reference"*/}
+                    {/*       name="reference"*/}
+                    {/*       id="reference"*/}
+                    {/*       value={formData.reference}*/}
+                    {/*       onChange={handleChange}*/}
+                    {/*       required/>*/}
+                    {/*<label htmlFor="reference"><b>Reference:</b></label>*/}
+                    <select
+                        name="reference"
+                        id="reference"
+                        value={formData.reference}
+                        onChange={handleChange}
+                        required
+                    >
+                        <option value="">Select an option</option>
+                        <option value="Social Media">Social Media</option>
+                        <option value="Print Media">Print Media</option>
+                        <option value="Other">Other</option>
+                    </select>
+
+                    {formData.reference === "Other" && (
+                        <>
+                            <label htmlFor="Other"><b>Other</b></label>
+                            <input
+                                type="text"
+                                placeholder="Enter Your Answer"
+                                name="Other"
+                                id="Other"
+                                value={formData.reference}
+                                onChange={handleChange}
+                                required
+                            />
+                        </>
+                    )}
+                    <div>
+                        <HCaptcha
+                            sitekey="8e2005b0-560c-459d-804c-c60bf29defef"
+                            onVerify={onVerifyCaptcha}
+                        />
+                    </div>
 
                     <p>On Submitting you agreeing to our <a href="/#">Terms & Condition</a>.</p>
                 </div>
@@ -332,6 +221,7 @@ const FormComponent = () => {
                 <button type="submit" className="registerbtn">Submit</button>
             </form>
             <ToastContainer/>
+            </motion.div>
         </div>
     );
 };
