@@ -20,7 +20,7 @@ const FormComponent = () => {
         other: '',
     });
 
-
+    const [captchaVerified, setCaptchaVerified] = useState(false);
     const handleChange = (e) => {
         setFormData({
             ...formData,
@@ -31,10 +31,14 @@ const FormComponent = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!captchaVerified) {
+            toast.error('Please verify the captcha.');
+            return;
+        }
 
         try {
-          const res = await axios.post('/inquiry', formData);
-          toast.success(`Data entered successfully, ${res.status}`);
+          const res = await axios.post('https://nys-server.onrender.com/inquiry', formData);
+          toast.success(`Data entered successfully`);
 
           setTimeout(() => {
             //const message = encodeURIComponent(`New inquiry raised by ${formData.fullname} ${formData.gender}%0aContact number is ${formData.userMobile}%0aReason for Joining NA Been practising yoga lately?: ${formData.doneyoga}%0aYes?where and how long have you been trying to practice? ${formData.yes}%0aAny illness or discomfort? ${formData.illness}%0aReference: Social Media / Print Media / Other? ${formData.reference}`);
@@ -56,18 +60,21 @@ const FormComponent = () => {
         } catch (error) {
           if (error.response && error.response.status === 409) {
             toast.error('Phone number already submitted');
+            console.log(error);
           } else {
             toast.error('Error submitting the form');
+              console.log(error);
           }
         }
       };
-    const onVerifyCaptcha=(token)=> {
+    const onVerifyCaptcha = (token) => {
         console.log("Verified: " + token);
-    }
+        // Update the captchaVerified state variable
+        setCaptchaVerified(true);
+    };
 
     return (
-        <div>
-
+        <>
             <NavBar/>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
             <form onSubmit={handleSubmit}>
@@ -113,8 +120,8 @@ const FormComponent = () => {
                         required
                     >
                         <option value="">Select an option</option>
-                        <option value="Social Media">Male</option>
-                        <option value="Print Media">Female</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
                     </select>
 
                     <label htmlFor="reason"><b>Reason For Joining Yoga</b></label>
@@ -196,13 +203,13 @@ const FormComponent = () => {
 
                     {formData.reference === "Other" && (
                         <>
-                            <label htmlFor="Other"><b>Other</b></label>
+                            <label htmlFor="Other"><b>Enter Your Reference</b></label>
                             <input
                                 type="text"
                                 placeholder="Enter Your Answer"
-                                name="Other"
-                                id="Other"
-                                value={formData.reference}
+                                name="yes"
+                                id="yes"
+                                value={formData.other}
                                 onChange={handleChange}
                                 required
                             />
@@ -222,7 +229,7 @@ const FormComponent = () => {
             </form>
             <ToastContainer/>
             </motion.div>
-        </div>
+        </>
     );
 };
 
