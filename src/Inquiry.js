@@ -37,7 +37,7 @@ const FormComponent = () => {
         }
 
         try {
-          const res = await axios.post('https://nys-server.onrender.com/inquiry', formData);
+          const res = await axios.post('/inquiry', formData);
           toast.success(`Data entered successfully`);
 
           setTimeout(() => {
@@ -77,7 +77,7 @@ const FormComponent = () => {
         <>
             <NavBar/>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-            <form onSubmit={handleSubmit}>
+            <form name={"Inquiry"} onSubmit={handleSubmit} netlify>
                 <div className="container">
                     <div className="container">
                         <div className="pinkFont">
@@ -217,6 +217,7 @@ const FormComponent = () => {
                     )}
                     <div>
                         <HCaptcha
+                            //sitekey={"10000000-ffff-ffff-ffff-000000000001"}
                             sitekey="8e2005b0-560c-459d-804c-c60bf29defef"
                             onVerify={onVerifyCaptcha}
                         />
