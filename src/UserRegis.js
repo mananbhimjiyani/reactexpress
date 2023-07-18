@@ -44,7 +44,7 @@ function UserRegis() {
 
 
         try {
-            const res = await axios.post('/userReg', formData);
+            const res = await axios.post('https://nys-server.onrender.com/userReg', formData);
             toast.success(`Data entered successfully`);
         } catch (error) {
             if (error.response && error.response.status === 409) {
