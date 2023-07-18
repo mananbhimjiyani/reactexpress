@@ -37,7 +37,7 @@ const FormComponent = () => {
         }
 
         try {
-          const res = await axios.post('/inquiry', formData);
+          const res = await axios.post('https://nys-server.onrender.com/inquiry', formData);
           toast.success(`Data entered successfully`);
 
           setTimeout(() => {
@@ -180,14 +180,6 @@ const FormComponent = () => {
                            required/>
 
                     <label htmlFor="reference"><b>Reference?</b></label>
-                    {/*<input type="text"*/}
-                    {/*       placeholder="Enter Your Reference"*/}
-                    {/*       name="reference"*/}
-                    {/*       id="reference"*/}
-                    {/*       value={formData.reference}*/}
-                    {/*       onChange={handleChange}*/}
-                    {/*       required/>*/}
-                    {/*<label htmlFor="reference"><b>Reference:</b></label>*/}
                     <select
                         name="reference"
                         id="reference"
